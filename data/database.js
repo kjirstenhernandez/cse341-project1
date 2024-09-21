@@ -2,11 +2,11 @@ const { MongoOIDCError } = require('mongodb');
 
 const dotenv = require('dotenv').config();
 
-const MongoClient = require('mongo').MongoClient
+const MongoClient = require('mongodb').MongoClient
 
 let database;
 
-const intDb = (callback) => {
+const initDb = (callback) => {
     if (database) {
         console.log('DB is already initialized!');
         return callback(null, database);

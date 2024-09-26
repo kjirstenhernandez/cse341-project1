@@ -27,7 +27,7 @@ const createUser = async (req, res) => {
         birthday: req.body.birthday
     }
     const response = await mongodb.getDatabase().db().collection('Contacts').insertOne(user);
-    if (response.modifiedCount > 0) {
+    if (response.acknowledged) {
         res.status(204).send();
     } else {
         res.status(500).json(response.error || 'Some error occurred while creating the user')

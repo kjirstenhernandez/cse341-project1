@@ -5,7 +5,7 @@
     "description": "Description",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "https://project1-m9sm.onrender.com",
   "basePath": "/",
   "schemes": [
     "http",

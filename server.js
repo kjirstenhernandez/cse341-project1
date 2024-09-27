@@ -6,6 +6,12 @@ const bodyParser = require('body-parser');
 
 //Place bodyparser BEFORE the routes, otherwise routes tries to process first!
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow_origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    next();
+});
+
 // ROUTES
 app.use("/", require("./routes"));
 

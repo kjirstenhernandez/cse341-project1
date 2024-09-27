@@ -8,8 +8,8 @@
   "host": "project1-m9sm.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http",
-    "htts"
+    "https",
+    "http"
   ],
   "paths": {
     "/": {

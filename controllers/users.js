@@ -38,12 +38,12 @@ const updateUser = async (req, res) => {
     const userId = ObjectId.createFromHexString(req.params.id);
     const updateFields = {};
 
-    // Adding only the fields that are present in req.body to avoid other fields being changed to 'null'
-    if (req.body.firstName !== undefined || req.body.firstName !== "any") updateFields.firstName = req.body.firstName;
-    if (req.body.lastName !== undefined || req.body.lastName !== "any") updateFields.lastName = req.body.lastName;
-    if (req.body.email !== undefined || req.body.email !== "any") updateFields.email = req.body.email;
-    if (req.body.favoriteColor !== undefined || req.body.favoriteColor !== "any") updateFields.favoriteColor = req.body.favoriteColor;
-    if (req.body.birthday !== undefined || req.body.birthday !== "any") updateFields.birthday = req.body.birthday;
+    // Adding only the fields that are present in req.body to avoid other fields being changed to 'null' or 'any'
+    if (req.body.firstName !== undefined && req.body.firstName !== "any") updateFields.firstName = req.body.firstName;
+    if (req.body.lastName !== undefined && req.body.lastName !== "any") updateFields.lastName = req.body.lastName;
+    if (req.body.email !== undefined && req.body.email !== "any") updateFields.email = req.body.email;
+    if (req.body.favoriteColor !== undefined && req.body.favoriteColor !== "any") updateFields.favoriteColor = req.body.favoriteColor;
+    if (req.body.birthday !== undefined && req.body.birthday !== "any") updateFields.birthday = req.body.birthday;
 
     const response = await mongodb.getDatabase().db().collection('Contacts').updateOne({_id: userId}, {$set: updateFields});
     if (response.modifiedCount > 0) {

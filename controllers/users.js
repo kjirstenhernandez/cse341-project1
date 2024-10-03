@@ -5,10 +5,14 @@ const ApiError = require('../utilities/error-handling/apiErrors');
 const getAll = async (req, res) => {
     const result = await mongodb.getDatabase().db().collection('Contacts').find();
     if (result) {
-        result.toArray().then((users) => {
+        result.toArray((err, lists) => {
+            if (err) {
+                res.status(400).json({ message: 'Could not complete request.'});
+                throw new ApiError.Api400Error(`Bad Request Error: could not obtain users. ${err}`)
+            }
+            })
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(users);
-        })
     } else {
         res.status(500).json(result.error || 'Some error occurred while getting the data')
         throw new ApiError.Api500Error(`Internal Server Error: could not obtain users. ${result.error}`); 
@@ -21,6 +25,10 @@ const getAll = async (req, res) => {
 };
 
 const getSingle = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Invalid contact ID.');
+        throw new ApiError.Api400Error(`Bad Request.`)
+    }
     const userId = ObjectId.createFromHexString(req.params.id);
     const result = await mongodb.getDatabase().db().collection('Contacts').find({_id: userId});
     if (result) {
@@ -57,6 +65,10 @@ const createUser = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Invalid contact ID.');
+        throw new ApiError.Api400Error(`Bad Request.`)
+    }
     const userId = ObjectId.createFromHexString(req.params.id);
     const updateFields = {};
 
@@ -78,6 +90,10 @@ const updateUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
+    if (!ObjectId.isValid(req.params.id)) {
+        res.status(400).json('Invalid contact ID.');
+        throw new ApiError.Api400Error(`Bad Request.`)
+    }
     const userId = ObjectId.createFromHexString(req.params.id);
     const response = await mongodb.getDatabase().db().collection('Contacts').deleteOne({_id: userId});
 

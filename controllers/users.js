@@ -52,7 +52,7 @@ const createUser = async (req, res) => {
         res.status(204).send();
     } else {
         res.status(500).json(response.error || 'Some error occurred while creating the user')
-        throw new ApiError.Api500Error(`Internal Server Error: ${response.error}`); 
+        throw new ApiError.Api500Error(`Internal Server Error: Could not create user. ${response.error}`); 
     }
 }
 
@@ -72,7 +72,7 @@ const updateUser = async (req, res) => {
         res.status(204).send();
     } else {
         res.status(500).json(response.error || 'Some error occurred while updating the user')
-        throw new ApiError.Api500Error(`Internal Server Error: ${response.error}`); 
+        throw new ApiError.Api500Error(`Internal Server Error: Could not update ${userId}. ${response.error}`); 
 
     }
 }
@@ -85,7 +85,7 @@ const deleteUser = async (req, res) => {
         res.status(204).send();
     } else {
         res.status(500).json(response.error || 'Some error occurred while deleting the user') // original end for errors
-        throw new ApiError.Api500Error(`Internal Server Error: ${response.error}`); 
+        throw new ApiError.Api500Error(`Internal Server Error: Could not delete ${userId}. ${response.error}`); 
 
     }
 }

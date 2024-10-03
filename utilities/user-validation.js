@@ -47,7 +47,7 @@ validate.checkUserData = async (req, res, next) => {
             });
             res.status(400).send(valList.join('; '));
             throw new ApiError.Api400Error(`Validation Error(s): ${valList.join('; ')}`) // error for dev log
-        // return res.status(400).send({errors: result.array()});
+        // return res.status(400).send({errors: result.array()}); -- Original error code
         }
     }
 

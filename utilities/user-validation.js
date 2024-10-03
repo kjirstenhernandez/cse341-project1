@@ -40,11 +40,15 @@ validate.createUserRules = () => {
 validate.checkUserData = async (req, res, next) => {
     const result = validationResult(req)
     if (!result.isEmpty()) {
-        valList = [];
-        result.array().forEach(error => {
-            valList.push(error.msg);
-        });
-        throw new ApiError.Api400Error(`Validation Error(s): ${valList.join('; ')}`) // error for dev log
+        if (!result.isEmpty()) {
+            valList = [];
+            result.array().forEach(error => {
+                valList.push(error.msg);
+            });
+            res.status(400).send(valList.join('; '));
+            throw new ApiError.Api400Error(`Validation Error(s): ${valList.join('; ')}`) // error for dev log
+        // return res.status(400).send({errors: result.array()});
+        }
     }
 
     next()

@@ -1,6 +1,8 @@
 const { body, validationResult } = require("express-validator");
 const validate = {};
+const ApiError = require('./error-handling/apiErrors');
 
+// ================================
 // User Creation Rules
 // ================================
 
@@ -38,7 +40,11 @@ validate.createUserRules = () => {
 validate.checkUserData = async (req, res, next) => {
     const result = validationResult(req)
     if (!result.isEmpty()) {
-        return res.status(400).send({errors: result.array()});
+        valList = [];
+        result.array().forEach(error => {
+            valList.push(error.msg);
+        });
+        throw new ApiError.Api400Error(`Validation Error(s): ${valList.join('; ')}`) // error for dev log
     }
 
     next()

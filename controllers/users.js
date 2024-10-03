@@ -1,21 +1,42 @@
 const mongodb = require("../data/database");
 const ObjectId = require('mongodb').ObjectId; //primary key for MongoDB, only if you're using Mongo's generated ID
+const ApiError = require('../utilities/error-handling/apiErrors');
 
 const getAll = async (req, res) => {
     const result = await mongodb.getDatabase().db().collection('Contacts').find();
-    result.toArray().then((users) => {
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).json(users);
-    })
+    if (result) {
+        result.toArray().then((users) => {
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).json(users);
+        })
+    } else {
+        res.status(500).json(result.error || 'Some error occurred while getting the data')
+        throw new ApiError.Api500Error(`Internal Server Error: could not obtain users. ${result.error}`); 
+
+    }
+    // result.toArray().then((users) => {
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.status(200).json(users);
+    // })
 };
 
 const getSingle = async (req, res) => {
     const userId = ObjectId.createFromHexString(req.params.id);
     const result = await mongodb.getDatabase().db().collection('Contacts').find({_id: userId});
+    if (result) {
     result.toArray().then((users) => {
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(users[0]);
     });
+    } else {
+        res.status(500).json(result.error || 'Some error occurred while getting the user')
+        throw new ApiError.Api500Error(`Internal Server Error: could not obtain user ${userId}. ${result.error}`); 
+    }
+    // Before adding error handling: 
+    // result.toArray().then((users) => {
+    //     res.setHeader('Content-Type', 'application/json');
+    //     res.status(200).json(users[0]);
+    // });
 };
 
 const createUser = async (req, res) => {
@@ -31,6 +52,7 @@ const createUser = async (req, res) => {
         res.status(204).send();
     } else {
         res.status(500).json(response.error || 'Some error occurred while creating the user')
+        throw new ApiError.Api500Error(`Internal Server Error: ${response.error}`); 
     }
 }
 
@@ -50,6 +72,8 @@ const updateUser = async (req, res) => {
         res.status(204).send();
     } else {
         res.status(500).json(response.error || 'Some error occurred while updating the user')
+        throw new ApiError.Api500Error(`Internal Server Error: ${response.error}`); 
+
     }
 }
 
@@ -60,7 +84,9 @@ const deleteUser = async (req, res) => {
     if (response.deletedCount > 0){
         res.status(204).send();
     } else {
-        res.status(500).json(response.error || 'Some error occurred while deleting the user') 
+        res.status(500).json(response.error || 'Some error occurred while deleting the user') // original end for errors
+        throw new ApiError.Api500Error(`Internal Server Error: ${response.error}`); 
+
     }
 }
 
